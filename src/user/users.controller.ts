@@ -9,8 +9,8 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { GetUserParamDto } from '../user/dto/get-user-param.dto';
-import { UsersService } from '../user/providers/users.service';
+import { GetUserParamDto } from './dto/get-user-param.dto';
+import { UsersService } from './providers/users.service';
 
 // http:localhost:3000/users
 @Controller('users')
