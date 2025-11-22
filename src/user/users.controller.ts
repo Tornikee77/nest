@@ -11,8 +11,9 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserParamDto } from './dto/get-user-param.dto';
-import { PatcUserDto } from './dto/patch-user.dto';
+import { PatchUserDto } from './dto/patch-user.dto';
 
+// http:localhost:3000/users
 @Controller('users')
 export class UsersController {
   //   @Get('/:id')
@@ -38,7 +39,7 @@ export class UsersController {
     return 'Here is post request';
   }
   @Patch()
-  public patchUSer(@Body() patchUserDto: PatcUserDto) {
+  public patchUSer(@Body() patchUserDto: PatchUserDto) {
     return patchUserDto;
   }
 }
