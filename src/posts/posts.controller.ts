@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { PostsService } from './providers/posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { PatchPostDto } from './dto/patch-post.dto';
 
 @Controller('posts')
 @ApiTags('posts')
@@ -37,7 +38,7 @@ export class PostsController {
       'You get a success 20o response if the post is updated successfully',
   })
   @Patch()
-  public updatePost(@Body() patchPostsDto: any) {
-    console.log(patchPostsDto);
+  public updatePost(@Body() patchPostDto: PatchPostDto) {
+    console.log(patchPostDto);
   }
 }
