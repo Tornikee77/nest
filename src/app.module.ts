@@ -1,27 +1,36 @@
-import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './user/users.module';
+import { Module } from '@nestjs/common';
+import { PostsModule } from './posts/posts.module';
+
+import { TagsModule } from './tags/tags.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user/user.entity';
+import { UsersModule } from './user/users.module';
+import { MetaOptionsModule } from './meta-options/meta-options.module';
 
 @Module({
   imports: [
     UsersModule,
     PostsModule,
     AuthModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      entities: [User],
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      host: 'localhost',
-      database: 'nestblog-api',
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [],
+      inject: [],
+      useFactory: () => ({
+        type: 'postgres',
+        // entities: [User],
+        synchronize: true,
+        port: 5432,
+        username: 'postgres',
+        password: 'postgres',
+        host: 'localhost',
+        autoLoadEntities: true,
+        database: 'nestblog-api',
+      }),
     }),
+    TagsModule,
+    MetaOptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
