@@ -20,6 +20,7 @@ import { User } from './user/user.entity';
       password: 'postgres',
       host: 'localhost',
       database: 'nestblog-api',
+      synchronize: true,
     }),
   ],
   controllers: [AppController],
