@@ -1,14 +1,22 @@
 import { AuthService } from 'src/auth/providers/auth.service';
 import { GetUserParamDto } from '../dto/get-user-param.dto';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '../user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
   constructor(
-    // Injecting Auth Service
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
   ) {}
+
+  public createUser(createUserDto: CreateUserDto) {}
   // method to find all Users
   public findAll(
     getUserParamDto: GetUserParamDto,
