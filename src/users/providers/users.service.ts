@@ -1,17 +1,16 @@
+import { GetUsersParamDto } from '../dtos/get-users-param.dto';
 import {
   BadRequestException,
   Inject,
   Injectable,
   InternalServerErrorException,
-  RequestTimeoutException,
   forwardRef,
 } from '@nestjs/common';
 import { User } from '../user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateUserDto } from '../dtos/create-user.dto';
 import { AuthService } from 'src/auth/providers/auth.service';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { GetUsersParamDto } from 'src/users/dtos/get-users-param.dto';
 
 /**
  * Controller class for '/users' API endpoint
@@ -31,22 +30,10 @@ export class UsersService {
   ) {}
 
   public async createUser(createUserDto: CreateUserDto) {
-    let existingUser = undefined;
-    try {
-      let existingUser = await this.usersRepository.findOne({
-        where: { email: createUserDto.email },
-      });
-    } catch (error) {
-      throw new RequestTimeoutException(
-        'Something went wrong while checking for existing user',
-      );
-    }
-    if (existingUser) {
-      throw new BadRequestException('User with email already exists', {
-        description: `User with email ${createUserDto.email} already exists`,
-      });
-    }
     // Check if user with email exists
+    const existingUser = await this.usersRepository.findOne({
+      where: { email: createUserDto.email },
+    });
 
     /**
      * Handle exceptions if user exists later
@@ -55,13 +42,7 @@ export class UsersService {
     // Try to create a new user
     // - Handle Exceptions Later
     let newUser = this.usersRepository.create(createUserDto);
-    try {
-      newUser = await this.usersRepository.save(newUser);
-    } catch (error) {
-      throw new BadRequestException('User with email already exists', {
-        description: `User with email ${createUserDto.email} already exists`,
-      });
-    }
+    newUser = await this.usersRepository.save(newUser);
 
     // Create the user
     return newUser;
