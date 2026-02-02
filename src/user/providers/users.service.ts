@@ -1,54 +1,35 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  RequestTimeoutException,
-  forwardRef,
-} from '@nestjs/common';
-import { User } from '../user.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { AuthService } from 'src/auth/providers/auth.service';
+import { GetUserParamDto } from 'src/users/dtos/get-users-param.dto';
 
-
-/**
- * Controller class for '/users' API endpoint
- */
 @Injectable()
 export class UsersService {
   constructor(
-
+    // Injecting Auth Service
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
   ) {}
 
-
+  // Method to find all Users
   public findAll(
-    getUserParamDto: GetUsersParamDto,
-    limt: number,
+    getUserParamDto: GetUserParamDto,
+    limit: number,
     page: number,
   ) {
+    const isAuth = this.authService.isAuth();
+    console.log(isAuth);
+
     return [
-      {
-        firstName: 'John',
-        email: 'john@doe.com',
-      },
-      {
-        firstName: 'Alice',
-        email: 'alice@doe.com',
-      },
+      { firstName: 'Mindia', email: 'Mindia@gmail.com' },
+      { firstName: 'Giorgi', email: 'Giorgi@gmail.com' },
     ];
   }
 
-  /**
-   * Public method used to find one user using the ID of the user
-   */
   public findOneById(id: string) {
     return {
       id: 1234,
-      firstName: 'Alice',
-      email: 'alice@doe.com',
+      firstName: 'Giorgi',
+      email: 'Giorgi@gmail.com',
     };
   }
 }

@@ -4,7 +4,6 @@ import { AuthModule } from './auth/auth.module';
 import { Module } from '@nestjs/common';
 import { PostsModule } from './posts/posts.module';
 
-import { TagsModule } from './tags/tags.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './user/users.module';
 import { MetaOptionsModule } from './meta-options/meta-options.module';
@@ -29,7 +28,6 @@ import { MetaOptionsModule } from './meta-options/meta-options.module';
         database: 'nestblog-api',
       }),
     }),
-    TagsModule,
     MetaOptionsModule,
   ],
   controllers: [AppController],
