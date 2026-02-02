@@ -1,58 +1,48 @@
 import {
+  Body,
   Controller,
-  Delete,
+  DefaultValuePipe,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
-  Put,
   Query,
-  Body,
-  Headers,
-  Ip,
-  ParseIntPipe,
-  DefaultValuePipe,
-  ValidationPipe,
 } from '@nestjs/common';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { GetUsersParamDto } from './dtos/get-users-param.dto';
-import { PatchUserDto } from './dtos/patch-user.dto';
+import { GetUserParamDto } from './dto/get-user-param.dto';
 import { UsersService } from './providers/users.service';
-import { ApiTags, ApiQuery, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { CreateUserDto } from './dto/create-user.dto';
+import { PatchUserDto } from './dto/patch-user.dto';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+// http:localhost:3000/users
 @Controller('users')
-@ApiTags('Users')
+@ApiTags('users')
 export class UsersController {
-  constructor(
-    // Injecting Users Service
-    private readonly usersService: UsersService,
-  ) {}
+  // Injecting Users Service
+  constructor(private readonly usersService: UsersService) {}
 
+  // http:localhost:3000/users?limit=10&page=1
   @Get('{/:id}')
-  @ApiOperation({
-    summary: 'Fetches a list of registered users on the application',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Users fetched successfully based on the query',
-  })
+  @ApiOperation({ summary: 'Fetches a list of registered users' })
   @ApiQuery({
     name: 'limit',
-    type: 'number',
+    type: String,
+    description: 'The upper limit of page you want to pagination to return',
     required: false,
-    description: 'The number of entries returned per query',
-    example: 10,
   })
   @ApiQuery({
     name: 'page',
-    type: 'number',
+    type: String,
+    description: 'The position of page you want to pagination to return',
     required: false,
-    description:
-      'The position of the page number that you want the API to return',
-    example: 1,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of users fetched successfully.',
   })
   public getUsers(
-    @Param() getUserParamDto: GetUsersParamDto,
+    @Param() getUserParamDto: GetUserParamDto,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ) {
@@ -61,7 +51,8 @@ export class UsersController {
 
   @Post()
   public createUser(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.createUser(createUserDto);
+    console.log(createUserDto);
+    return 'here is a post request';
   }
 
   @Patch()
