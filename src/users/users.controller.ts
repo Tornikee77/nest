@@ -3,53 +3,56 @@ import {
   Controller,
   DefaultValuePipe,
   Get,
-  Headers,
-  Ip,
   Param,
   ParseIntPipe,
   Patch,
   Post,
   Query,
-} from "@nestjs/common";
-import { CreaterUserDto } from "./dtos/create-user.dto";
-import { GetusersParamDto } from "./dtos/get-users-param.dto";
-import { PatchUserDto } from "./dtos/patch-user.dto";
+} from '@nestjs/common';
+import { GetUserParamDto } from './dto/get-user-param.dto';
+import { UsersService } from './providers/users.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { PatchUserDto } from './dto/patch-user.dto';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 // http:localhost:3000/users
-@Controller("users")
-export class UsersControlelr {
-  // Get request - http:localhost:3000/users/20000/new - "You send Get Request"
+@Controller('users')
+@ApiTags('users')
+export class UsersController {
+  // Injecting Users Service
+  constructor(private readonly usersService: UsersService) {}
 
-  // Get request - http:localhost:3000/users/20000?limit=20&sort=desc - "You send Get Request"
-
-  // @Get("/:id?")
-  // @Get("{/:id}")
-  // @Get("/:id")
-  // public getusers(
-  //   @Param() params: { id: string },
-  //   @Query() query: Record<string, string>,
-  // ) {
-  //   console.log(params);
-  //   console.log("this is Query:", query);
-  //   return `You send a Get Request to User with ID : ${params.id}`;
-  // }
-
-  // @Param("optional") optional: string,
-  // @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number,
-  // @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
-
-  @Get("{/:id}")
-  public getUsers(@Param() getUserParamDto: GetusersParamDto) {
-    console.log(getUserParamDto);
-    return `you sent a get request to users endpoint`;
+  // http:localhost:3000/users?limit=10&page=1
+  @Get('{/:id}')
+  @ApiOperation({ summary: 'Fetches a list of registered users' })
+  @ApiQuery({
+    name: 'limit',
+    type: String,
+    description: 'The upper limit of page you want to pagination to return',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'page',
+    type: String,
+    description: 'The position of page you want to pagination to return',
+    required: false,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of users fetched successfully.',
+  })
+  public getUsers(
+    @Param() getUserParamDto: GetUserParamDto,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+  ) {
+    return this.usersService.findAll(getUserParamDto, limit, page);
   }
 
-  //                      body-ში არსებული data
   @Post()
-  public createUser(@Body() createrUserDto: CreaterUserDto) {
-    // console.log(createrUserDto instanceof CreaterUserDto);
-    console.log(createrUserDto);
-    return `Here is your post request`;
+  public createUser(@Body() createUserDto: CreateUserDto) {
+    console.log(createUserDto);
+    return 'here is a post request';
   }
 
   @Patch()
