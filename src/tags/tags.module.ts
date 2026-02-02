@@ -6,5 +6,10 @@ import { Tag } from './tag.entity';
 @Module({
   controllers: [TagsController],
   imports:[TypeOrmModule.forFeature([Tag])]
-})
+=======
+import { Tag } from './tag.entity';
+import { TagsController } from './tags.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+
 export class TagsModule {}
