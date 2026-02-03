@@ -1,11 +1,10 @@
-import { CreatePostDto } from '../dtos/create-post.dto';
-import { Injectable } from '@nestjs/common';
-import { MetaOptionsService } from './../../meta-options/meta-options.service';
-import { UsersService } from 'src/users/providers/users.service';
-import { Repository } from 'typeorm';
-import { Post } from '../post.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { MetaOption } from 'src/meta-options/meta-option.entity';
+import { CreatePostDto } from "../dtos/create-post.dto";
+import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { UsersService } from "src/user/providers/users.service";
+import { Repository } from "typeorm";
+import { Post } from "../post.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { MetaOption } from "src/meta-options/meta-option.entity";
 
 @Injectable()
 export class PostsService {
@@ -13,6 +12,7 @@ export class PostsService {
     /*
      * Injecting Users Service
      */
+    @Inject(forwardRef(() => UsersService)) // აუცილებლად დაამატე ეს!
     private readonly usersService: UsersService,
 
     /**
