@@ -42,7 +42,13 @@ export class UsersService {
     }
 
     let newUser = this.userRepository.create(createUserDto);
-    newUser = await this.userRepository.save(newUser);
+    try {
+      newUser = await this.userRepository.save(newUser);
+    } catch (error) {
+      throw new BadRequestException('User with this email already exists', {
+        description: `user with this email:${createUserDto.email} is already exist`,
+      });
+    }
 
     return newUser;
   }
