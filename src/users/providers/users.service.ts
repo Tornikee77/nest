@@ -1,4 +1,4 @@
-import { GetUserParamDto } from '../dtos/get-users-param.dto';
+import { GetUsersParamDto } from '../dtos/get-users-param.dto';
 import {
   BadRequestException,
   Inject,
@@ -52,8 +52,8 @@ export class UsersService {
    * Public method responsible for handling GET request for '/users' endpoint
    */
   public findAll(
-    getUserParamDto: GetUserParamDto,
-    limit: number,
+    getUserParamDto: GetUsersParamDto,
+    limt: number,
     page: number,
   ) {
     return [

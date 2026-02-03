@@ -4,13 +4,13 @@ import {
   Inject,
   Injectable,
   RequestTimeoutException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { AuthService } from 'src/auth/providers/auth.service';
-import { GetUserParamDto } from 'src/users/dtos/get-users-param.dto';
-import { User } from '../user.entity';
-import { Repository } from 'typeorm';
-import { CreateUserDto } from '../dto/create-user.dto';
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { AuthService } from "src/auth/providers/auth.service";
+import { User } from "../user.entity";
+import { Repository } from "typeorm";
+import { CreateUserDto } from "../dto/create-user.dto";
+import { GetUsersParamDto } from "src/users/dtos/get-users-param.dto";
 
 @Injectable()
 export class UsersService {
@@ -32,11 +32,11 @@ export class UsersService {
       });
     } catch (error) {
       throw new RequestTimeoutException(
-        'unable to process  request at this time, pleaese try again',
+        "unable to process  request at this time, pleaese try again",
       );
     }
     if (existingUser) {
-      throw new BadRequestException('User with this email already exists', {
+      throw new BadRequestException("User with this email already exists", {
         description: `user with this email:${createUserDto.email} is already exist`,
       });
     }
@@ -45,7 +45,7 @@ export class UsersService {
     try {
       newUser = await this.userRepository.save(newUser);
     } catch (error) {
-      throw new BadRequestException('User with this email already exists', {
+      throw new BadRequestException("User with this email already exists", {
         description: `user with this email:${createUserDto.email} is already exist`,
       });
     }
@@ -55,7 +55,7 @@ export class UsersService {
 
   // Method to find all Users
   public findAll(
-    getUserParamDto: GetUserParamDto,
+    getUserParamDto: GetUsersParamDto,
     limit: number,
     page: number,
   ) {
@@ -63,16 +63,16 @@ export class UsersService {
     console.log(isAuth);
 
     return [
-      { firstName: 'Mindia', email: 'Mindia@gmail.com' },
-      { firstName: 'Giorgi', email: 'Giorgi@gmail.com' },
+      { firstName: "Mindia", email: "Mindia@gmail.com" },
+      { firstName: "Giorgi", email: "Giorgi@gmail.com" },
     ];
   }
 
   public findOneById(id: string) {
     return {
       id: 1234,
-      firstName: 'Giorgi',
-      email: 'Giorgi@gmail.com',
+      firstName: "Giorgi",
+      email: "Giorgi@gmail.com",
     };
   }
 }

@@ -1,50 +1,58 @@
 import {
-  Body,
   Controller,
-  DefaultValuePipe,
+  Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
+  Put,
   Query,
+  Body,
+  Headers,
+  Ip,
+  ParseIntPipe,
+  DefaultValuePipe,
+  ValidationPipe,
 } from '@nestjs/common';
-
-import { UsersService } from './providers/users.service';
-
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { GetUserParamDto } from './dtos/get-users-param.dto';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { GetUsersParamDto } from './dtos/get-users-param.dto';
 import { PatchUserDto } from './dtos/patch-user.dto';
+import { UsersService } from './providers/users.service';
+import { ApiTags, ApiQuery, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-// http:localhost:3000/users
 @Controller('users')
-@ApiTags('users')
+@ApiTags('Users')
 export class UsersController {
-  // Injecting Users Service
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    // Injecting Users Service
+    private readonly usersService: UsersService,
+  ) {}
 
-  // http:localhost:3000/users?limit=10&page=1
   @Get('{/:id}')
-  @ApiOperation({ summary: 'Fetches a list of registered users' })
-  @ApiQuery({
-    name: 'limit',
-    type: String,
-    description: 'The upper limit of page you want to pagination to return',
-    required: false,
-  })
-  @ApiQuery({
-    name: 'page',
-    type: String,
-    description: 'The position of page you want to pagination to return',
-    required: false,
+  @ApiOperation({
+    summary: 'Fetches a list of registered users on the application',
   })
   @ApiResponse({
     status: 200,
-    description: 'List of users fetched successfully.',
+    description: 'Users fetched successfully based on the query',
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: 'number',
+    required: false,
+    description: 'The number of entries returned per query',
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'page',
+    type: 'number',
+    required: false,
+    description:
+      'The position of the page number that you want the API to return',
+    example: 1,
   })
   public getUsers(
-    @Param() getUserParamDto: GetUserParamDto,
+    @Param() getUserParamDto: GetUsersParamDto,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ) {
@@ -53,8 +61,7 @@ export class UsersController {
 
   @Post()
   public createUser(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto);
-    return 'here is a post request';
+    return this.usersService.createUser(createUserDto);
   }
 
   @Patch()

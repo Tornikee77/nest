@@ -5,7 +5,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
+} from 'typeorm';
 
 @Entity()
 export class Tag {
@@ -13,7 +13,7 @@ export class Tag {
   id: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 256,
     nullable: false,
     unique: true,
@@ -21,7 +21,7 @@ export class Tag {
   name: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 512,
     nullable: false,
     unique: true,
@@ -29,19 +29,19 @@ export class Tag {
   slug: string;
 
   @Column({
-    type: "text",
+    type: 'text',
     nullable: true,
   })
   description: string;
 
   @Column({
-    type: "text",
+    type: 'text',
     nullable: true,
   })
   schema: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 1024,
     nullable: true,
   })
