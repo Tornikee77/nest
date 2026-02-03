@@ -1,4 +1,9 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  RequestTimeoutException,
+} from "@nestjs/common";
 import { DataSource } from "typeorm";
 import { CreateManyUsersDto } from "../dtos/create-many-user.dto";
 import { User } from "../user.entity";
@@ -10,9 +15,14 @@ export class UsersCreateManyProvider {
   public async createMany(createManyUsersDto: CreateManyUsersDto) {
     let newUsers: User[] = [];
     const queryRunner = this.dataSource.createQueryRunner();
-
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+    try {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+    } catch (error) {
+      throw new RequestTimeoutException(
+        "Unable to proces request at the moment",
+      );
+    }
 
     try {
       for (const user of createManyUsersDto.users) {
@@ -25,12 +35,17 @@ export class UsersCreateManyProvider {
       return newUsers;
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      throw new InternalServerErrorException(
-        "Unable to create users",
-        error.message,
-      );
+      throw new ConflictException("Conflict occurred while creating users", {
+        description: String(error),
+      });
     } finally {
-      await queryRunner.release();
+      try {
+        await queryRunner.release();
+      } catch (error) {
+        throw new RequestTimeoutException(
+          "Could not release query runner connection",
+        );
+      }
     }
   }
 }
