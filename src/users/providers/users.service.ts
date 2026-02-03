@@ -1,16 +1,12 @@
-import { GetUsersParamDto } from '../dtos/get-users-param.dto';
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  forwardRef,
-} from '@nestjs/common';
-import { User } from '../user.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from '../dtos/create-user.dto';
-import { AuthService } from 'src/auth/providers/auth.service';
+import { GetUsersParamDto } from "../dtos/get-users-param.dto";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
+import { User } from "../user.entity";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
+import { CreateUserDto } from "../dtos/create-user.dto";
+import { AuthService } from "src/auth/providers/auth.service";
+import { UsersCreateManyProvider } from "./users-create-many.provider";
+import { CreateManyUsersDto } from "../dtos/create-many-user.dto";
 
 /**
  * Controller class for '/users' API endpoint
@@ -27,6 +23,8 @@ export class UsersService {
     // Injecting Auth Service
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
+
+    private readonly usersCreatemanyProvider: UsersCreateManyProvider,
   ) {}
 
   public async createUser(createUserDto: CreateUserDto) {
@@ -58,12 +56,12 @@ export class UsersService {
   ) {
     return [
       {
-        firstName: 'John',
-        email: 'john@doe.com',
+        firstName: "John",
+        email: "john@doe.com",
       },
       {
-        firstName: 'Alice',
-        email: 'alice@doe.com',
+        firstName: "Alice",
+        email: "alice@doe.com",
       },
     ];
   }
@@ -74,8 +72,12 @@ export class UsersService {
   public findOneById(id: string) {
     return {
       id: 1234,
-      firstName: 'Alice',
-      email: 'alice@doe.com',
+      firstName: "Alice",
+      email: "alice@doe.com",
     };
+  }
+
+  public async createMany(createManyUsersDto: CreateManyUsersDto) {
+    return this.usersCreatemanyProvider.createMany(createManyUsersDto);
   }
 }

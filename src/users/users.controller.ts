@@ -13,48 +13,49 @@ import {
   ParseIntPipe,
   DefaultValuePipe,
   ValidationPipe,
-} from '@nestjs/common';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { GetUsersParamDto } from './dtos/get-users-param.dto';
-import { PatchUserDto } from './dtos/patch-user.dto';
-import { UsersService } from './providers/users.service';
-import { ApiTags, ApiQuery, ApiOperation, ApiResponse } from '@nestjs/swagger';
+} from "@nestjs/common";
+import { CreateUserDto } from "./dtos/create-user.dto";
+import { GetUsersParamDto } from "./dtos/get-users-param.dto";
+import { PatchUserDto } from "./dtos/patch-user.dto";
+import { UsersService } from "./providers/users.service";
+import { ApiTags, ApiQuery, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { CreateManyUsersDto } from "./dtos/create-many-user.dto";
 
-@Controller('users')
-@ApiTags('Users')
+@Controller("users")
+@ApiTags("Users")
 export class UsersController {
   constructor(
     // Injecting Users Service
     private readonly usersService: UsersService,
   ) {}
 
-  @Get('{/:id}')
+  @Get("{/:id}")
   @ApiOperation({
-    summary: 'Fetches a list of registered users on the application',
+    summary: "Fetches a list of registered users on the application",
   })
   @ApiResponse({
     status: 200,
-    description: 'Users fetched successfully based on the query',
+    description: "Users fetched successfully based on the query",
   })
   @ApiQuery({
-    name: 'limit',
-    type: 'number',
+    name: "limit",
+    type: "number",
     required: false,
-    description: 'The number of entries returned per query',
+    description: "The number of entries returned per query",
     example: 10,
   })
   @ApiQuery({
-    name: 'page',
-    type: 'number',
+    name: "page",
+    type: "number",
     required: false,
     description:
-      'The position of the page number that you want the API to return',
+      "The position of the page number that you want the API to return",
     example: 1,
   })
   public getUsers(
     @Param() getUserParamDto: GetUsersParamDto,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
   ) {
     return this.usersService.findAll(getUserParamDto, limit, page);
   }
@@ -64,6 +65,10 @@ export class UsersController {
     return this.usersService.createUser(createUserDto);
   }
 
+  @Post("create-many")
+  public createManyUsers(@Body() createManyUsersDto: CreateManyUsersDto) {
+    return this.usersService.createMany(createManyUsersDto);
+  }
   @Patch()
   public patchUser(@Body() patchUserDto: PatchUserDto) {
     return patchUserDto;
