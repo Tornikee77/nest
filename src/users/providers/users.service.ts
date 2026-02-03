@@ -13,6 +13,7 @@ import { CreateUserDto } from "../dtos/create-user.dto";
 import { AuthService } from "src/auth/providers/auth.service";
 import { create } from "domain";
 import { UsersCreateManyProvider } from "./users-create-many.provider";
+import { CreateManyUsersDto } from "../dtos/create-many-user.dto";
 
 /**
  * Controller class for '/users' API endpoint
@@ -83,7 +84,7 @@ export class UsersService {
     };
   }
 
-  public async createMany(createUserDto: CreateUserDto[]) {
-    return this.usersCreatemanyProvider.createmany(createUserDto);
+  public async createMany(createManyUsersDto: CreateManyUsersDto) {
+    return this.usersCreatemanyProvider.createMany(createManyUsersDto);
   }
 }
