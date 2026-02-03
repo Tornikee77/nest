@@ -12,7 +12,7 @@ export class PostsService {
     /*
      * Injecting Users Service
      */
-    @Inject(forwardRef(() => UsersService)) // აუცილებლად დაამატე ეს!
+    @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
 
     /**
