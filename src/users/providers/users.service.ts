@@ -1,17 +1,10 @@
 import { GetUsersParamDto } from "../dtos/get-users-param.dto";
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  forwardRef,
-} from "@nestjs/common";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { User } from "../user.entity";
-import { DataSource, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateUserDto } from "../dtos/create-user.dto";
 import { AuthService } from "src/auth/providers/auth.service";
-import { create } from "domain";
 import { UsersCreateManyProvider } from "./users-create-many.provider";
 import { CreateManyUsersDto } from "../dtos/create-many-user.dto";
 
