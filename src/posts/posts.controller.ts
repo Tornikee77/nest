@@ -8,14 +8,15 @@ import {
   Patch,
   Post,
   Query,
-} from '@nestjs/common';
-import { PostsService } from './providers/posts.service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreatePostDto } from './dtos/create-post.dto';
-import { PatchPostDto } from './dtos/patch-post.dto';
+} from "@nestjs/common";
+import { PostsService } from "./providers/posts.service";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { CreatePostDto } from "./dtos/create-post.dto";
+import { PatchPostDto } from "./dtos/patch-post.dto";
+import { GetPostsDto } from "./dto/get-posts.dto";
 
-@Controller('posts')
-@ApiTags('Posts')
+@Controller("posts")
+@ApiTags("Posts")
 export class PostsController {
   constructor(
     /*
@@ -28,23 +29,27 @@ export class PostsController {
    * GET localhost:3000/posts/:userId
    */
   @ApiOperation({
-    summary: 'Get all blog posts for a specific user',
+    summary: "Get all blog posts for a specific user",
   })
   @ApiResponse({
     status: 200,
-    description: 'A list of blog posts for the specified user',
+    description: "A list of blog posts for the specified user",
   })
-  @Get('{/:userId}')
-  public getPosts(@Param('userId') userId: string) {
-    return this.postsService.findAll(userId);
+  @Get("{/:userId}")
+  public getPosts(
+    @Param("userId") userId: string,
+    @Query() postQuery: GetPostsDto,
+  ) {
+    console.log(postQuery);
+    return this.postsService.findAll(userId, postQuery);
   }
 
   @ApiOperation({
-    summary: 'Creates a new blog post',
+    summary: "Creates a new blog post",
   })
   @ApiResponse({
     status: 201,
-    description: 'You get a 201 response if your post is created successfully',
+    description: "You get a 201 response if your post is created successfully",
   })
   @Post()
   public createPost(@Body() createPostDto: CreatePostDto) {
@@ -52,11 +57,11 @@ export class PostsController {
   }
 
   @ApiOperation({
-    summary: 'Updates an existing blog post',
+    summary: "Updates an existing blog post",
   })
   @ApiResponse({
     status: 200,
-    description: 'A 200 response if the post is updated successfully',
+    description: "A 200 response if the post is updated successfully",
   })
   @Patch()
   public updatePost(@Body() patchPostsDto: PatchPostDto) {
@@ -67,7 +72,7 @@ export class PostsController {
    * Route to delete a post
    */
   @Delete()
-  public deletePost(@Query('id', ParseIntPipe) id: number) {
+  public deletePost(@Query("id", ParseIntPipe) id: number) {
     return this.postsService.delete(id);
   }
 }
