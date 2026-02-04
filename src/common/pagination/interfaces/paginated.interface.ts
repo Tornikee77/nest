@@ -1,5 +1,5 @@
 export interface Paginated<T> {
-  dataL: T[];
+  data: T[];
   meta: {
     itemsPerPage: number;
     totalItems: number;
