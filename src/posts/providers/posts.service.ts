@@ -5,6 +5,7 @@ import { Post } from "../post.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { MetaOption } from "src/meta-options/meta-option.entity";
 import { UsersService } from "src/users/providers/users.service";
+import { GetPostsDto } from "../dto/get-posts.dto";
 
 @Injectable()
 export class PostsService {
@@ -51,12 +52,11 @@ export class PostsService {
   /**
    * Method to find all posts
    */
-  public async findAll(userId: string) {
+  public async findAll(userId: string, postQuery: GetPostsDto) {
     // find all posts
     let posts = await this.postsRepository.find({
-      relations: {
-        metaOptions: true,
-      },
+      skip: (postQuery.page - 1) * postQuery.limit,
+      take: postQuery.limit,
     });
 
     return posts;

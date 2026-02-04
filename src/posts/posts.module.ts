@@ -8,10 +8,16 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { UsersModule } from "src/users/users.module";
 import { User } from "src/users/user.entity";
 import { TagsModule } from "src/tags/tags.module";
+import { PaginationModule } from "src/common/pagination/pagination.module";
 
 @Module({
   controllers: [PostsController],
   providers: [PostsService],
-  imports: [UsersModule, TypeOrmModule.forFeature([Post, User]), TagsModule],
+  imports: [
+    UsersModule,
+    TypeOrmModule.forFeature([Post, User]),
+    TagsModule,
+    PaginationModule,
+  ],
 })
 export class PostsModule {}
