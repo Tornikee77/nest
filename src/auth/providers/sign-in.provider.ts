@@ -9,6 +9,7 @@ import {
 import { UsersService } from "src/users/providers/users.service";
 import { HashingProvider } from "./hashing.provider";
 import { SignInDto } from "../dtos/sign-in.dto";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class SignInProvider {
@@ -18,6 +19,8 @@ export class SignInProvider {
 
     // Inject the hashing provider
     private readonly hashingProvider: HashingProvider,
+
+    private readonly jwtService: JwtService,
   ) {}
   public async signIn(SignInDto: SignInDto) {
     let user = await this.usersService.findOneByEmail(SignInDto.email);
@@ -34,6 +37,18 @@ export class SignInProvider {
     if (!isEqual) {
       throw new UnauthorizedException("Invalid credentials provided");
     }
-    return true;
+    // JWT hardcoded signing options (temporary)
+    const accessToken = await this.jwtService.signAsync(
+      {
+        sub: user.id,
+        email: user.email,
+      },
+      {
+        secret: "mysecretkey1234",
+        expiresIn: "1h", //token valid for 1 hour
+        issuer: "my-nest-api", // identifies the principal that issued the JWT
+        audience: "my-nest-users", // identifies uour frontend
+      },
+    );
   }
 }
