@@ -83,7 +83,7 @@ export class UsersService {
    * Public method used to find one user using the ID of the user
    */
   public async findOneById(id: number) {
-    let user = undefined;
+    let user: User | null = null;
 
     try {
       user = await this.usersRepository.findOneBy({
