@@ -15,7 +15,7 @@ import { PaginationModule } from "src/common/pagination/pagination.module";
   providers: [PostsService],
   imports: [
     UsersModule,
-    TypeOrmModule.forFeature([Post, User]),
+    TypeOrmModule.forFeature([Post, User, MetaOption]),
     TagsModule,
     PaginationModule,
   ],

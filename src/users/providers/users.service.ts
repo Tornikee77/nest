@@ -18,6 +18,7 @@ import { UsersCreateManyProvider } from "./users-create-many.provider";
 import { CreateUserProvider } from "./create-user.provider";
 import { FindOneUserByEmailProvider } from "./find-one-user-by-email.provider";
 import { CreateManyUsersDto } from "../dtos/create-many-user.dto";
+import { ConfigService } from "@nestjs/config";
 
 /**
  * Controller class for '/users' API endpoint
@@ -47,6 +48,10 @@ export class UsersService {
      * Inject findOneUserByEmailProvider
      */
     private readonly findOneUserByEmailProvider: FindOneUserByEmailProvider,
+
+    private readonly configService: ConfigService,
+
+    //
   ) {}
 
   /**
@@ -64,6 +69,7 @@ export class UsersService {
     limt: number,
     page: number,
   ) {
+    const enviroment = this.configService.get<String>("JWT_SECRET ");
     throw new HttpException(
       {
         status: HttpStatus.MOVED_PERMANENTLY,
