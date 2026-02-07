@@ -69,7 +69,7 @@ export class UsersService {
     limt: number,
     page: number,
   ) {
-    const enviroment = this.configService.get<String>("JWT_SECRET");
+    const enviroment = this.configService.get<String>("JWT_SECRET ");
     throw new HttpException(
       {
         status: HttpStatus.MOVED_PERMANENTLY,

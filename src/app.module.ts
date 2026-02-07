@@ -4,36 +4,42 @@ import { AuthModule } from "./auth/auth.module";
 import { MetaOptionsModule } from "./meta-options/meta-options.module";
 import { Module } from "@nestjs/common";
 import { PostsModule } from "./posts/posts.module";
-import { Tag } from "./tags/tag.entity";
 import { TagsModule } from "./tags/tags.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 /**
  * Importing Entities
  * */
-import { User } from "./users/user.entity";
-import { UsersModule } from "./users/users.module";
 import { PaginationModule } from "./common/pagination/pagination.module";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { UsersModule } from "./users/users.module";
+import { appConfig } from "./config/app.config";
+
+// Get the current node_enviroment
+const ENV = process.env.NODE_ENV;
 
 @Module({
   imports: [
     UsersModule,
     PostsModule,
     AuthModule,
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: !ENV ? ".env" : `.env.${ENV}`,
+      load: [appConfig],
+    }),
     TypeOrmModule.forRootAsync({
-      imports: [],
-      inject: [],
-      useFactory: () => ({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (ConfigService: ConfigService) => ({
         type: "postgres",
-        // entities: [User],
-        synchronize: true,
-        port: 5432,
-        username: "postgres",
-        password: "postgres",
-        host: "localhost",
-        autoLoadEntities: true,
-        database: "nestblog-api",
+        //entities: [User],
+        synchronize: ConfigService.get("database.synchronize"),
+        port: +ConfigService.get("database.port"),
+        username: ConfigService.get("database.user"),
+        password: ConfigService.get("database.password"),
+        host: ConfigService.get("database.host"),
+        autoLoadEntities: ConfigService.get("database.autoLoadEntities"),
+        database: ConfigService.get("database.name"),
       }),
     }),
     TagsModule,
