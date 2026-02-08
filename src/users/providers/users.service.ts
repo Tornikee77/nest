@@ -17,10 +17,10 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { UsersCreateManyProvider } from "./users-create-many.provider";
 import { CreateUserProvider } from "./create-user.provider";
 import { FindOneUserByEmailProvider } from "./find-one-user-by-email.provider";
-import { CreateManyUsersDto } from "../dtos/create-many-user.dto";
 import { ConfigService } from "@nestjs/config";
 import type { ConfigType } from "@nestjs/config";
 import profileConfig from "../config/profile.config";
+import { CreateManyUsersDto } from "../dtos/create-many-user.dto";
 
 /**
  * Controller class for '/users' API endpoint
@@ -51,13 +51,12 @@ export class UsersService {
      */
     private readonly findOneUserByEmailProvider: FindOneUserByEmailProvider,
 
+    // // Inject ConfigService
     // private readonly configService: ConfigService,
 
-    // Inject profile Config
+    // Inject Profile config
     @Inject(profileConfig.KEY)
     private readonly profileConfiguration: ConfigType<typeof profileConfig>,
-
-    //
   ) {}
 
   /**
@@ -77,6 +76,7 @@ export class UsersService {
   ) {
     console.log(this.profileConfiguration);
     console.log(this.profileConfiguration.apiKey);
+
     throw new HttpException(
       {
         status: HttpStatus.MOVED_PERMANENTLY,
@@ -96,7 +96,7 @@ export class UsersService {
    * Public method used to find one user using the ID of the user
    */
   public async findOneById(id: number) {
-    let user: User | null = null;
+    let user: User | null;
 
     try {
       user = await this.usersRepository.findOneBy({
