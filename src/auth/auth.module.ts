@@ -7,6 +7,8 @@ import { HashingProvider } from "./providers/hashing.provider";
 import { BcryptProvider } from "./providers/bcrypt.provider";
 import { SignInProvider } from "./providers/sign-in.provider";
 import { JwtModule } from "@nestjs/jwt";
+import { ConfigModule } from "@nestjs/config";
+import jwtConfig from "./config/jwt.config";
 
 @Module({
   controllers: [AuthController],
@@ -20,14 +22,8 @@ import { JwtModule } from "@nestjs/jwt";
   ],
   imports: [
     forwardRef(() => UsersModule),
-    JwtModule.register({
-      secret: "mysecretkey1234",
-      signOptions: {
-        expiresIn: "1h",
-        issuer: "my-nest-api",
-        audience: "my-nest-users",
-      },
-    }),
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
   exports: [AuthService, HashingProvider],
 })
