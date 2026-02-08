@@ -10,6 +10,8 @@ import { UsersService } from "src/users/providers/users.service";
 import { HashingProvider } from "./hashing.provider";
 import { SignInDto } from "../dtos/sign-in.dto";
 import { JwtService } from "@nestjs/jwt";
+import jwtConfig from "../config/jwt.config";
+import type { ConfigType } from "@nestjs/config";
 
 @Injectable()
 export class SignInProvider {
@@ -21,6 +23,9 @@ export class SignInProvider {
     private readonly hashingProvider: HashingProvider,
 
     private readonly jwtService: JwtService,
+
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
   ) {}
   public async signIn(SignInDto: SignInDto) {
     let user = await this.usersService.findOneByEmail(SignInDto.email);
@@ -44,11 +49,14 @@ export class SignInProvider {
         email: user.email,
       },
       {
-        secret: "mysecretkey1234",
-        expiresIn: "1h", //token valid for 1 hour
-        issuer: "my-nest-api", // identifies the principal that issued the JWT
-        audience: "my-nest-users", // identifies uour frontend
+        audience: this.jwtConfiguration.audience,
+        issuer: this.jwtConfiguration.issuer,
+        secret: this.jwtConfiguration.secret,
+        expiresIn: this.jwtConfiguration.accessTokenTtl,
       },
     );
+    return {
+      accessToken,
+    };
   }
 }
