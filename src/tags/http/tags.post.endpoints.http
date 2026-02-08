@@ -1,8 +1,0 @@
-POST http://localhost:3000/tags
-Content-Type: application/json
-
-{
-  "name": "typescript",
-  "slug": "typescript",
-  "description": "All posts typescript"
-}

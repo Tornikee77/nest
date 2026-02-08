@@ -51,7 +51,6 @@ export class UsersService {
      */
     private readonly findOneUserByEmailProvider: FindOneUserByEmailProvider,
 
-    // // Inject ConfigService
     // private readonly configService: ConfigService,
 
     // Inject Profile config
