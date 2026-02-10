@@ -20,6 +20,7 @@ import { APP_GUARD } from "@nestjs/core";
 import { AccessTokenGuard } from "./auth/guards/access-token/access-token.guard";
 import jwtConfig from "./auth/config/jwt.config";
 import { JwtModule } from "@nestjs/jwt";
+import { AuthenticationGuard } from "./auth/guards/authentication/authentication.guard";
 
 // Get the current node_enviroment
 const ENV = process.env.NODE_ENV;
@@ -57,6 +58,10 @@ const ENV = process.env.NODE_ENV;
     PaginationModule,
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_GUARD, useClass: AccessTokenGuard }],
+  providers: [
+    AppService,
+    { provide: APP_GUARD, useClass: AuthenticationGuard },
+    AccessTokenGuard,
+  ],
 })
 export class AppModule {}
